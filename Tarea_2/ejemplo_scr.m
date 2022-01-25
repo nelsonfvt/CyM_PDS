@@ -1,6 +1,6 @@
-%señal exponencial
+%señal exponencial real
 n= 0:9;
-A=0.5;
+A=-0.5;
 xn=A.^n;
 stem(n,xn)
 
