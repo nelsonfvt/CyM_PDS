@@ -1,5 +1,4 @@
 import numpy as np
-import math
 import matplotlib.pyplot as plt
 
 # Señal de tiempo continuo
@@ -15,10 +14,9 @@ xnT= 2*np.cos(2*np.pi*2*nT) + 3*np.sin(2*np.pi*6*nT)
 plt.figure(1)
 plt.plot(t, xt, color = 'red') 
 plt.stem(nT,xnT) 
-plt.title("Discretización") 
-plt.xlabel("Tiempo(s)") 
+plt.title("Discretización de señal análoga") 
+plt.xlabel("Tiempo (s)") 
 plt.ylabel("Amplitud") 
-plt.show()
 
 # Señal de tiempo discreto
 N=Fs
