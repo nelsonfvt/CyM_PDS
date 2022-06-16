@@ -1,41 +1,46 @@
-% Generando señal análoga
-t=0:0.001:1;
-xt=2*cos(2*pi*3*t)+3*cos(2*pi*6*t);
-%Discretizando señal en tiempo
-Ts=1/18;
-Fs=1/Ts;
-nTs=0:Ts:1;
-xnTs=2*cos(2*pi*3*nTs)+3*cos(2*pi*6*nTs);
-%Mostrando en pantalla
-figure('Name','Señal análoga y señal discretizada')
+%% Simulación y discretización de uns sitema de segundo orden
+%Generando base de tiempo
+T=30;
+tsim=0.01;
+t=0:tsim:T;
+
+%parámetros del sistema
+m=30;
+b=20;
+k=50;
+
+% Constantes de la F. de transferencia
+b1=b/m;
+a1=b1;
+b2=k/m;
+a2=b2;
+num=[0 b1 b2];
+den=[1 b1 b2];
+
+% Simulación: Respuesta escalón del sistema
+[y]=step(num,den,t);
+figure
+plot(t,y)
+xlabel('tiempo (segundos)')
+ylabel('Amplitud')
+
+%% Muestreo de la Respuesta al escalón
+Ns=100;
+nTs=t(1:Ns:length(t));
+yTs=y(1:Ns:length(y));
+fprintf('Periodo de muestreo: %4.2f segundos',nTs(2))
+figure
 hold on
-plot(t,xt);
-stem(nTs,xnTs);
+plot(t,y)
+stem(nTs,yTs)
+xlabel('tiempo (segundos)')
+ylabel('Amplitud')
 hold off
-%cuantificando la señal de tiempo discreto
-ran=max(xt)-min(xt);%rango de la señal
-nbits=8;%bits de cuantificacion
-nnivs=(2^nbits)-1;%numero de niveles de cuantificacion
-delta=ran/nnivs;%altura de nivel
-nive=min(xt):delta:max(xt);
-nivem=nive+delta/2;
-[~,N]=size(nTs);
-xnq=zeros(1,N);
-for i=1:N
-    j=1;
-    while xnTs(i)>nivem(j)
-        j=j+1;
-    end
-    xnq(i)=nive(j);
-end
-figure('Name','Señal discretizada y señal cuantificada')
-stem(nTs,xnq)
-hold on
-stem(nTs,xnTs)
-hold off
-%error de cuantificacion
-err=xnTs-xnq;
-figure('Name','Error de cuantificacion')
-stem(nTs,err);
-meadia_err=mean(err)
-desv_err=std(err)
+
+% Representación en tiempo discreto
+N=length(nTs);
+n=0:N-1;
+figure
+stem(n,yTs)
+xlabel('tiempo (muestras)')
+ylabel('Amplitud')
