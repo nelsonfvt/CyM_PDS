@@ -19,18 +19,18 @@ freq = getSignalFrequency()
 amp = getSignalAmplitude()
 
 # open serial port
-ser = serial.Serial('/dev/ttys001', 9600)
+ser = serial.Serial('/dev/ttys003', 9600)
 t = 0
 try:
     while True:
         xt = 128 + amp * np.cos(2*np.pi*freq*t)
         #tx = chr(int(val)).encode('utf-8')
         xt = round(xt, 2)
-        #print(xt)
-        xtBytes = struct.pack('f',xt)
-        print(xtBytes)
+        print(xt)
+        xtBytes = struct.pack('f', xt)
+        #print(xtBytes)
         ser.write(xtBytes)
-        t = t+0.01
+        t = t + 0.01
 except KeyboardInterrupt:
     pass
 

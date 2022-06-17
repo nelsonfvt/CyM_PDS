@@ -3,13 +3,13 @@ import serial
 import struct
 
 # open serial port
-ser = serial.Serial('/dev/ttys002', 9600)
+ser = serial.Serial('/dev/ttys004', 9600)
 
 try:
     while True:
-        x = ser.read()
-        xt = struct.unpack('b', x)
-        print(xt)
+        x = ser.read(4)
+        xt = struct.unpack('f', x)
+        print(xt[0])
 except KeyboardInterrupt:
     pass
 
