@@ -1,10 +1,13 @@
 import serial
+import numpy as np
 
 print('hello')
 
-ser = serial.Serial('/dev/pts/2', 9600)
-print(ser.name)
-for i in range(256):
-    tx = chr(int(i)).encode('utf-8')
+t = np.arange(0.0,10.0,0.01)
+ser = serial.Serial('/dev/pts/6', 9600)
+for i in range(len(t)):
+    c = np.cos(2*np.pi*70*t[i])
+    val = 128 + 100 * c
+    tx = chr(int(val)).encode('utf-8')
     ser.write(tx)
 ser.close()
