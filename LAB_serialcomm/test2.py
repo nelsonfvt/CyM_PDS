@@ -3,7 +3,8 @@ import serial
 import struct
 
 # open serial port
-ser = serial.Serial('/dev/ttys004', 9600)
+ser = serial.Serial('/dev/pts/3', 9600)
+print(ser)
 
 try:
     while True:
@@ -11,6 +12,7 @@ try:
         xt = struct.unpack('f', x)
         print(xt[0])
 except KeyboardInterrupt:
+    print('Terminado por teclado')
     pass
 
 ser.close()

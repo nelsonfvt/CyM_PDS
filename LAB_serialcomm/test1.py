@@ -1,6 +1,7 @@
 import serial
 import numpy as np
 import struct
+import matplotlib.pyplot as plt
 
 def getSignalFrequency():
     freq = -1.0
@@ -18,29 +19,24 @@ def getSignalAmplitude():
 freq = getSignalFrequency()
 amp = getSignalAmplitude()
 
-# open serial port
-ser = serial.Serial('/dev/ttys003', 9600)
-t = 0
 try:
+    # open serial port
+    ser = serial.Serial('/dev/pts/2',9600) #serial.Serial('/dev/ttys003', 9600)
+    
+    # variables de tiempo
+    t = 0
+    Ts = 0.01 #Periodo de muestreo
+
     while True:
-        xt = 128 + amp * np.cos(2*np.pi*freq*t)
-        #tx = chr(int(val)).encode('utf-8')
-        xt = round(xt, 2)
-        print(xt)
-        xtBytes = struct.pack('f', xt)
-        #print(xtBytes)
-        ser.write(xtBytes)
-        t = t + 0.01
+        xt = 128 + amp * np.cos(2*np.pi*freq*t) #generando señal
+        #xt = chr(int(val)).encode('utf-8') #convierte a tipo char
+        xt = round(xt, 2) # redondeo
+        xtBytes = struct.pack('f', xt) # conversion a tipo bytes
+        ser.write(xtBytes) # envia a puerto
+
+        t = t + Ts
 except KeyboardInterrupt:
+    print('Terminado por teclado')
     pass
 
 ser.close()
-
-# t = np.arange(0.0,10.0,0.01)
-# ser = serial.Serial('/dev/ttys001', 9600)
-# for i in range(len(t)):
-#     c = np.cos(2*np.pi*70*t[i])
-#     val = 128 + 100 * c
-#     tx = chr(int(val)).encode('utf-8')
-#     ser.write(tx)
-# ser.close()
