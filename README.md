@@ -3,5 +3,5 @@ En este repositorio encontrará los códigos de ejemplo relacionados con las act
 
 *Procesamiento Digital de Señales (PDS)*
 
-Cada carpeta está numerada y corresponde con la respectiva actividad.
-Los códigos presentes son de caracter académico y de libre uso para el parendizaje de la asignatura.
+Cada carpeta está corresponde con la respectiva actividad según su nombre.
+Los códigos presentes son de caracter académico y de libre uso para el aprendizaje de la asignatura.
