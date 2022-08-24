@@ -1,5 +1,5 @@
 # Series de tiempo
-Ejemplos implementados en python que demuestran el uso de la libreria de modelos estadisticos statsmodels
+Ejemplos implementados en python que exploran el uso de la libreria de modelos estadisticos statsmodels
 
 Los ejemplos has sido tomados de:
 
