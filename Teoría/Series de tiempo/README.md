@@ -5,3 +5,4 @@ Los ejemplos has sido tomados de:
 
 https://machinelearningmastery.com/arima-for-time-series-forecasting-with-python/
 
+https://www.projectpro.io/article/how-to-build-arima-model-in-python/544
