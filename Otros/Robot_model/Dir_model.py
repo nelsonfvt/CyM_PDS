@@ -2,13 +2,13 @@ import sys
 import numpy as np
 import math
 
-T = np.array([0, 0, 0])
+T = np.array([0.0, 0.0, 0.0])
 
 for i in range(1, len(sys.argv)):
     T[i-1] = float(sys.argv[i])
 
-P = np.array([[0], [0], [0], [1]])
-a = np.array([0, 10, 10])
+P = np.array([[0.0], [0.0], [0.0], [1.0]])
+a = np.array([0.0, 10.0, 10.0])
 
 A01 = np.array([[math.cos(T[0]), 0, math.sin(T[0]), 0], 
               [math.sin(T[0]), 0, -math.cos(T[0]), 0 ],
