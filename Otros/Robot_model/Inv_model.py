@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import math
 
-EF = np.array([0.0, 0.0, 0.0, 1.0])
+EF = np.array([20.0, 0.0, 0.0])
 
 for i in range(1, len(sys.argv)):
     EF[i-1] = float(sys.argv[i])
