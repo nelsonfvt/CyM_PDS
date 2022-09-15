@@ -10,7 +10,7 @@ csvwrite('static.csv',[Ac_x Ac_y Ac_z Gy_x Gy_y Gy_z]);
 
 Ac_x = 0.1*randn(1,10000);
 Ac_y = 0.15*randn(1,10000);
-Ac_z = 7 + 0.13*randn(1,10000);
+Ac_z = 9.8 + 0.13*randn(1,10000);
 
 Gy_x = 0.2*randn(1,10000);
 Gy_y = 0.2*randn(1,10000);
@@ -33,4 +33,4 @@ for i=1:N_ar
     Gy_z = Gy_z - a(6,i)*cos(2*pi*n*(f(i)/200)) + b(6,i)*sin(2*pi*n*(f(i)/200));
 end
 
-csvwrite('motion.csv',[Ac_x' Ac_y' Ac_z' Gy_x' Gy_y' Gy_z']);
+csvwrite('motion.csv',[Ac_x' Ac_y' Ac_z'+5 Gy_x' Gy_y' Gy_z']);
