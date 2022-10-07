@@ -1,8 +1,8 @@
 syms Thx Thy Thz %Angulos
 syms Xpp Ypp Zpp; %Aceleraciones
 syms g; %Aceleración gravedad
-% Variables de estado:
-syms X Xp Xpp Y Yp Ypp Z Zp Zpp Thx Thxp Thy Thyp Thz Thzp
+% Otras variables de estado:
+syms X Xp Y Yp Z Zp Thxp Thyp Thzp
 %Vector de estado
 X_s = [X Xp Xpp Y Yp Ypp Z Zp Zpp Thx Thxp Thy Thyp Thz Thzp];
 
