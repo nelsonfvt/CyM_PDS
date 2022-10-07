@@ -1,5 +1,5 @@
 syms Thx Thy Thz %Angulos
-syms Xpp Ypp Zpp; %Aceleraciones
+syms Xpp Ypp Zpp %Aceleraciones
 syms g; %Aceleración gravedad
 % Otras variables de estado:
 syms X Xp Y Yp Z Zp Thxp Thyp Thzp
