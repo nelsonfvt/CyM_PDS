@@ -1,18 +1,20 @@
 % Simulación espacio de trabajo Robot 3DOF
 
-Angs = -2*pi/3:0.1:2*pi/3;
+Angs1 = -pi/3:0.1:pi/6; %rango primera articulación
+Angs2 = -pi/3:0.1:pi/3; %rango segunda articulación
+Angs3 =  0.01:0.1:2*pi/3; %rango tercera articulación
 
 avec = [];
 pvec = [];
 
 %% searching spaces
-for i = 1:length(Angs)
-    for j = 1:length(Angs)
-        for k = 1:length(Angs)
-            Ths = [Angs(i) Angs(j) Angs(k)];
+for i = 1:length(Angs1)
+    for j = 1:length(Angs2)
+        for k = 1:length(Angs3)
+            Ths = [Angs1(i) Angs2(j) Angs3(k)];
             Pos = CDir3DOF(Ths);
             fang = CInv3DOF(Pos);
-            
+            % determinar coeherencia entre modelos cinemáticos
             if norm(Ths - fang') <= 0.01
                 avec = [avec Ths'];
                 pvec = [pvec Pos];
