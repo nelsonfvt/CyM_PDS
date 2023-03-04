@@ -9,6 +9,13 @@ def RGB_HSV (imag):
     cv.waitKey(0)
     cv.destroyAllWindows()
 
+def RGB_LAB(imag):
+    i_lab = cv.cvtColor(imag, cv.COLOR_BGR2Lab)
+    cv.imshow('Original', imag)
+    cv.imshow('Imagen L*a*b*', i_lab)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
 def plot_imgs(imag1, imag2):
     plt.subplot(2,1,1)
     plt.imshow(imag1, 'gray')
@@ -20,3 +27,6 @@ imagS = cv.imread('dibujo.png') # CARGANDO IMAGEN SINTÉTICA
 
 RGB_HSV(imagN)
 RGB_HSV(imagS)
+
+RGB_LAB(imagN)
+RGB_LAB(imagS)
