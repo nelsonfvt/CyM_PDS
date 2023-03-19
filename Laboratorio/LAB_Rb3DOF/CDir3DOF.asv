@@ -11,12 +11,19 @@ function [Pfin] = CDir3DOF(Angs)
 %   brazo
 
 a = [0 10 10];
-d = [0 0 0];
-al = [pi/2 0 0];
 
-A01 = Mx_hgne(a(1), d(1),al(1),Angs(1));
-A12 = Mx_hgne(a(2), d(2),al(2),Angs(2));
-A23 = Mx_hgne(a(3), d(3),al(3),Angs(3));
+A01 = [cos(Angs(1)) 0 sin(Angs(1)) 0;
+       sin(Angs(1)) 0 -cos(Angs(1)) 0;
+       0 1 0 0;
+       0 0 0 1];
+A12 = [cos(Angs(2)) -sin(Angs(2)) 0 a(2)*cos(Angs(2));
+       sin(Angs(2)) cos(Angs(2)) 0 a(2)*sin(Angs(2));
+       0 0 1 0;
+       0 0 0 1];
+A23 = [cos(Angs(3)) -sin(Angs(3)) 0 a(3)*cos(Angs(3));
+       sin(Angs(3)) cos(Angs(3)) 0 a(3)*sin(Angs(3));
+       0 0 1 0;
+       0 0 0 1];
 
 A03 = A01*A12*A23;
 
@@ -25,7 +32,6 @@ end
 
 function [Mx] = Mx_hgne(a,d,al,T)
     Mx = [cos(T) -sin(T)*cos(al) sin(T)*cos(al) a*cos(T);
-          sin(T) cos(T)*cos(al) -sin(T)*cos(al) a*sin(T);
-          0 sin(al) cos(al) d;
-          0 0 0 1];
+          sin(T) cos(T)*cos(al) -sin(T)*cos(al) a*sin(t);
+          0 sin(al) cos(al) ];
 end

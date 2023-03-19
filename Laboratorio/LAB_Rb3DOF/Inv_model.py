@@ -4,7 +4,10 @@ import math
 
 def Inv_model(EF):
     a = np.array([0.0, 10.0, 10.0])
+    d = np.array([0.0, 0.0, 0.0])
     T = np.array([0.0, 0.0, 0.0])
+
+    EF[2] = EF[2] - d[0]
 
     T[0] = np.arctan2(EF[1], EF[0])
 
