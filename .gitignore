@@ -16,6 +16,7 @@ downloads/
 eggs/
 .eggs/
 etc/
+etc
 lib/
 lib64/
 lib64
