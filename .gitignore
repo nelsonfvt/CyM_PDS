@@ -15,6 +15,7 @@ dist/
 downloads/
 eggs/
 .eggs/
+etc/
 lib/
 lib64/
 lib64
