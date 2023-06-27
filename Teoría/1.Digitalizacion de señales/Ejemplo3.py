@@ -2,10 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Generación de señal análoga y gráfica
-t=np.arange(0.0,1.0,0.001)
+Ts = 1.0/24.0
+t=np.arange(0.0,1.0,Ts/100.0)
 f1 = 4 #Hz
 f2 = 6 #Hz
 xt = 2*np.cos(2*np.pi*f1*t) + 3*np.sin(2*np.pi*f2*t)
+#Adicion ruido aleatorio
+# c_noise = np.random.rand(len(t))
+# xt = xt + 0.5*c_noise
 plt.figure(1)
 plt.plot(t, xt, color = 'blue') 
 plt.title("Señal análoga") 
@@ -14,10 +18,10 @@ plt.ylabel("Amplitud")
 plt.grid()
 
 # Discretización
-Ts = 1.0/24.0
-Fs = 1.0/Ts
-nTs = np.arange(0.0,1.0,Ts)
-xnTs = 2*np.cos(2*np.pi*f1*nTs) + 3*np.sin(2*np.pi*f2*nTs)
+samples = np.arange(0.0,1.0,Ts)
+n = range(0,len(t),100)
+nTs = t[n]
+xnTs = xt[n]
 plt.figure(2)
 plt.plot(t, xt, color = 'red') 
 plt.stem(nTs,xnTs) 

@@ -2,7 +2,7 @@
 t=0:0.001:1;
 f1 = 4;
 f2 = 6;
-xt=2*cos(2*pi*f1*t)+3*sin(2*pi*f2*t); % 2 Hz y 6 Hz
+xt=2*cos(2*pi*f1*t)+3*sin(2*pi*f2*t); % 4 Hz y 6 Hz
 figure,
 plot(t,xt)
 hold on
