@@ -9,11 +9,13 @@ prompt = "Ingrese el nivel DC de la senal a reconstruir: ";
 D = input(prompt);
 
 Nc = 10; %representar Nc ciclos de la senal
-t = 0 : 1/(F*4*N) : Nc/F;
+t = 0 : 1/(4*F*N) : Nc/F;
+
+A = ones(2,N); %Amplitudes
 
 ft = ones(1,length(t))*D; % Aplicando nivel DC
 for n=1:N % Combinando N armonicos de amplitud 1
-    ft = ft + cos(2*pi*n*F*t) - sin(2*pi*n*F*t);
+    ft = ft + A(1,n)*cos(2*pi*n*F*t) - A(2,n)*sin(2*pi*n*F*t);
 end
 
 figure
