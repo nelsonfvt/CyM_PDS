@@ -78,18 +78,24 @@ for i=1:1000
     %Actualizacion matriz P
     P=F*P*F'+Q;
 
-    %UPDATE
-
-    
-    %Hx
+    % UPDATE
+    %Calcualndo hx
     A_x=(estados(2)-x_p_n1)/ts;
     A_y=((estados(6)-theta_p_n1)/ts)*ri;
     E_l=(sqrt(estados(2)^2+estados(4)^2)-estados(6)*l)/r;
     E_r=(sqrt(estados(2)^2+estados(4)^2)+estados(6)*l)/r;
     W_z=estados(6);
 
+    hx = [A_x;
+          A_y;
+          E_l;
+          E_r;
+          W_z];
+
     %Comparacion con sensores - calculo y_m
-    y_m = zeros(5,1);
+    %Capturar sensores en el vector z
+    z = zeros(5,1);
+    y_m = z - hx;
     
     %___________________
     %Matriz H
@@ -108,7 +114,9 @@ for i=1:1000
     % Ajuste de los estados
     estados = estados + K*y_m;
 
-    % 
+    % Ajuste Matriz P
+
+    P = (eye(6) - K*H)*P;
 
     % Almacena datos
     X_vec(i)=estados(1);
