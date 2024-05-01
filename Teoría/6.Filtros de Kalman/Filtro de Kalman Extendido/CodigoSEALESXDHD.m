@@ -61,13 +61,13 @@ for i=1:1000
     estados(2)=V*cos(estados(5));
     estados(4)=V*sin(estados(5));
 
-    % Actualizando orientacion del robot
+    % Calculo orientacion del robot
     estados(5)=estados(6)*ts+estados(5);
     % Actualizando posicion del robot
     estados(1)=estados(2)*ts+estados(1);
     estados(3)=estados(4)*ts+estados(3);
 
-    % matriz_F - Jacobiano
+    % Matriz_F - Jacobiano
     F=[1 ts 0 0 0 0;
        0 0 0 0 sin(estados(5))*(r/2)*(wr+wl) 0;
        0 0 1 ts 0 0;
@@ -79,7 +79,7 @@ for i=1:1000
     P=F*P*F'+Q;
 
     % UPDATE
-    %Calcualndo hx
+    %Calculo hx
     A_x=(estados(2)-x_p_n1)/ts;
     A_y=((estados(6)-theta_p_n1)/ts)*ri;
     E_l=(sqrt(estados(2)^2+estados(4)^2)-estados(6)*l)/r;
