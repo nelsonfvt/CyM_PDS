@@ -28,10 +28,9 @@ with open('samples_1.csv') as csvfile:
     samples = csv.reader(csvfile)
     for row in samples:
         y = 0
-        dato_nuevo = float(row[0])
         for i in range(N-1, 0, -1):
             xn[i] = xn[i-1]
             y = y + xn[i] * hn[i]
-        xn[0] = dato_nuevo
+        xn[0] = float(row[0])
         y = y + xn[0] * hn[0]
         print(y)

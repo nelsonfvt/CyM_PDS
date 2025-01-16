@@ -28,7 +28,7 @@ int main()
                     -0.00286181108699136,
                     0.00149691288917507,
                     0.00246537164680589};
-    //cout << hn[2] << endl;
+    
     fstream fin;
 
     fin.open("samples_1.csv", ios::in);
@@ -36,7 +36,15 @@ int main()
 
     while(getline(fin,num))
     {
-        cout << num << endl;
+        float y = 0;
+        for(int i = N-1; i > 0; i--)
+        {
+            xn[i] = xn[i-1];
+            y += xn[i] * hn[i];
+        }
+        xn[0] = stof(num);
+        y += xn[0] * hn[0];
+        cout << y << endl;
     }
-
+    
 }
