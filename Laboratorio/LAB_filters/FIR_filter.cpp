@@ -7,8 +7,8 @@ using namespace std;
 int main()
 {
     int N = 20;
-    float xn[20] = {0};
-    float hn[20] = {0.00246537164680589,
+    double xn[20] = {0};
+    double hn[20] = {0.00246537164680589,
                     0.00149691288917507,
                     -0.00286181108699136,
                     -0.0129898372015373,
@@ -36,13 +36,13 @@ int main()
 
     while(getline(fin,num))
     {
-        float y = 0;
+        double y = 0;
         for(int i = N-1; i > 0; i--)
         {
             xn[i] = xn[i-1];
             y += xn[i] * hn[i];
         }
-        xn[0] = stof(num);
+        xn[0] = stod(num);
         y += xn[0] * hn[0];
         cout << y << endl;
     }
