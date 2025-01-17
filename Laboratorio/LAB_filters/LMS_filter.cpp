@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     int N = 20;
-    double mu = 0.0001;
+    double mu = 0.001;
     double xn[20] = {0};
     double hn[20] = {0.01};
 
@@ -17,11 +17,11 @@ int main()
     string num;
 
     double y = 0;
-    double d = 0.05;
+    double e = 0;
 
     while (getline(fin,num))
     {
-        double e = d - y;
+        double d = -stod(num) * 0.3; //algo simple
         y = 0;
         for(int i = N-1; i > 0; i--)
         {
@@ -32,7 +32,8 @@ int main()
         xn[0] = stod(num);
         y += xn[0] * hn[0];
         hn[0] += mu*e*xn[0];
-        cout << e << endl;
+        e = d - y;
+        cout << "x: " << xn[0] << " d: " << d << " y: " << y << " e: " << e << endl;
     }
     
 }
