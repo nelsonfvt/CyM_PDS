@@ -21,7 +21,7 @@ int main()
 
     while (getline(fin,num))
     {
-        double d = -stod(num) * 0.3; //algo simple
+        double d = -0.3*stod(num) + 0.125*xn[0] -0.1*xn[1] + 0.5*xn[2]; //algo simple
         y = 0;
         for(int i = N-1; i > 0; i--)
         {
@@ -33,7 +33,6 @@ int main()
         y += xn[0] * hn[0];
         hn[0] += mu*e*xn[0];
         e = d - y;
-        cout << "x: " << xn[0] << " d: " << d << " y: " << y << " e: " << e << endl;
+        cout << " d: " << d << " y: " << y << " e: " << e << endl;
     }
-    
 }
