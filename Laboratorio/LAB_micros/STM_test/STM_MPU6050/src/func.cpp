@@ -68,5 +68,8 @@ void MstRx_i2c1(uint8_t slv_addr, uint8_t reg_addr, uint8_t* data)
     tmp = I2C1->SR1; // limpia
     tmp = I2C1->SR2; //limpia
     while(!(I2C1->SR1 & I2C_SR1_TXE)); //espera linea libre
-    I2C1->DR = reg_addr;
+    I2C1->DR = reg_addr; // carga segunda direccion
+    while(!(I2C1->SR1 & I2C_SR1_ADDR)); //espera envio direccion
+    tmp = I2C1->SR1; // limpia
+    tmp = I2C1->SR2; //limpia
 }
