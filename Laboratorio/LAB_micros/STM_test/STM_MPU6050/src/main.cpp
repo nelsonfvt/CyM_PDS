@@ -9,8 +9,6 @@
 
 float Acc[3];
 float Gyr[3];
-int flag;
-int cont;
 
 extern "C"{
 void TIM2_IRQHandler(void)
@@ -19,9 +17,11 @@ void TIM2_IRQHandler(void)
 
     MPU6050_Read_Accel(Acc);
     MPU6050_Read_Gyro(Gyr);
+
+    send_pack('a', Acc, Gyr);
     
     GPIOC->ODR ^= GPIO_ODR_OD13; //cambio LED
-    flag = 1;
+    
 }
 }
 
@@ -40,9 +40,6 @@ int main(){
 
     MPU_init();
 
-    // verificar MPU6050
-    flag = -1;
-
     //Configuracion timer 2
 	Configura_timer2();
 	//Habilita interrupcion timer2
@@ -51,18 +48,6 @@ int main(){
 
     while(1)
     {
-        cont++;
-        if(cont > 1)
-        {
-            if(flag>0)
-            {
-                send_pack('a', Acc, Gyr);
-                //send_pack('a', Acc);
-                //send_pack('g', Gyr);
-            }
-            cont = 0; 
-        }
-
         
     }
     return 0;

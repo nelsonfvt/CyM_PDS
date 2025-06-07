@@ -4,11 +4,12 @@ import sys
 import struct
 
 class MPU6050_2_csv:
-    def __init__(self, ser_port, file_name):
+    def __init__(self, ser_port):
         self.ser_port = ser_port
-        self.file_name = file_name
+        self.file_name = None
         self.n_samples = 0
         self.port_open = False
+        self.values_list = []
         
 
     def connect(self):
@@ -19,22 +20,27 @@ class MPU6050_2_csv:
         except IOError:
             print("Falló abrir el puerto serial " + self.ser_port)
 
+    def disconnect(self):
+        if self.port_open:
+            self.s_comm.close()
+            print("Puerto serial cerrado")
+
 
     def MPU_capture(self, n_samples):
         if self.port_open == True:
             self.n_samples = int(n_samples)
             print("Inicia captura de " + n_samples + " muestras")
 
-            values_list = [None] * self.n_samples
+            self.values_list = [None] * self.n_samples
 
             f = True
             cont = 0
 
             while f:
+                t_list = [None] * 6
                 band = self.s_comm.read()
-                if band[0] == 97:
 
-                    t_list = [None] * 6
+                if band[0] == 97:
 
                     buff = self.s_comm.read(4)
                     ax = struct.unpack('f', buff[0:4])[0] # bytes a float
@@ -58,11 +64,11 @@ class MPU6050_2_csv:
                     t_list[4] = gy
                     t_list[5] = gz
 
-                    print (t_list)
-
                     cont += 1
                     if cont == self.n_samples:
                         f = False
+                    self.values_list[cont-1] = t_list
+                
 
 
 
@@ -93,6 +99,16 @@ class MPU6050_2_csv:
         else:
             print("Puerto serial no abierto")
 
+    def MPU_save(self, file_name):
+        print("Guardando archivo...")
+        self.file_name = file_name
+        fields = ['AccX', 'AccY', 'AccZ', 'GyrX', 'GyrY', 'GyrZ']
+
+        with open(self.file_name, 'w') as f:
+            write = csv.writer(f)
+            write.writerow(fields)
+            write.writerows(self.values_list)
+        print("Archivo: " + file_name + " guardado")
 
 
 
@@ -106,10 +122,12 @@ if __name__ == "__main__":
         n_samples = sys.argv[3]
 
         
-        my_MPU = MPU6050_2_csv(port, file_name)
+        my_MPU = MPU6050_2_csv(port)
         my_MPU.connect()
         if my_MPU.port_open:
             my_MPU.MPU_capture(n_samples)
+            my_MPU.MPU_save(file_name)
+            my_MPU.disconnect()
     
     else:
         print("Faltan argumentos...")
