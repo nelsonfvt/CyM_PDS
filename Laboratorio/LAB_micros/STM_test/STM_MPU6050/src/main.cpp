@@ -56,8 +56,9 @@ int main(){
         {
             if(flag>0)
             {
-                send_pack('a', Acc);
-                send_pack('g', Gyr);
+                send_pack('a', Acc, Gyr);
+                //send_pack('a', Acc);
+                //send_pack('g', Gyr);
             }
             cont = 0; 
         }
