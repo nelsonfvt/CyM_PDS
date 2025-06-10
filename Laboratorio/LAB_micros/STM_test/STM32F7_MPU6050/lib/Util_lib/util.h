@@ -1,7 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "stm32f401xe.h"
+#include "stm32f7xx.h"
 
 /*Funciones de conversion - definiciones*/
 float fromBytesToFloat(uint8_t*);
