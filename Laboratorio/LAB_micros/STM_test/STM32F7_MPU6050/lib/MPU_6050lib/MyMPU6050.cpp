@@ -1,8 +1,6 @@
 #include "MyMPU6050.h"
 #include <my_i2c.h>
 
-
-
 #define MPU6050_ADDR 0xD0
 #define SMPLRT_DIV_REG 0x19
 #define GYRO_CONFIG_REG 0x1B
@@ -49,8 +47,9 @@ void MPU_init()
 void MPU_read(uint8_t s_addr, uint8_t r_addr, uint8_t *data)
 {
     SendByte_i2c2(s_addr, r_addr);
+    Reset_i2c2();
     ReadByte_i2c2(s_addr, data);
-    
+    Reset_i2c2();
 }
 
 void MPU_write(uint8_t s_addr, uint8_t r_addr, uint8_t data)

@@ -127,16 +127,25 @@ void Configura_i2c2()
     I2C2->TIMINGR |= (6UL<<I2C_TIMINGR_PRESC_Pos);
     I2C2->TIMINGR |= 9UL; //SCLL
     I2C2->TIMINGR |= (9UL<<I2C_TIMINGR_SCLH_Pos); //SCLH
-    //I2C1->CR1 |= I2C_CR1_TXIE; //???
+    
+    I2C2->CR1 |= I2C_CR1_ANFOFF; //filtro de ruido desactivado
+    I2C2->CR1 |= I2C_CR1_NOSTRETCH; //nostretch desactivado
 
     I2C2->CR1 |= I2C_CR1_PE; // habilta periferico 
 }
 
+void Reset_i2c2()
+{
+    I2C2->CR1 &= ~I2C_CR1_PE;
+	while (I2C2->CR1 & I2C_CR1_PE);
+	I2C2->CR1 |=I2C_CR1_PE;
+}
+
 void SendByte_i2c2(uint8_t s_addr, uint8_t data)
 {
-    //Master_initializer(s_addr, 1, 1);
+    //Master_initializer
     I2C2->CR2 &= ~I2C_CR2_ADD10; // 7 bits
-    I2C2->CR2 |= I2C_CR2_AUTOEND;
+    I2C2->CR2 |= I2C_CR2_AUTOEND; //Auto
     I2C2->CR2 |= ((1UL<<I2C_CR2_NBYTES_Pos) | s_addr);//0x020120D0; //CR2 PARA TRANSFERIR BYTE 
     I2C2->CR2 &= ~I2C_CR2_RD_WRN; // escribir
     I2C2->CR2 |= I2C_CR2_START;
@@ -146,8 +155,9 @@ void SendByte_i2c2(uint8_t s_addr, uint8_t data)
     I2C2->TXDR = data; // carga dato
     while(!(I2C2->ISR & I2C_ISR_TXE)); //espera envio data
     
-    while(!(I2C2->ISR & I2C_ISR_STOPF)); //envio stop
-    //I2C2->ISR &= ~I2C_ISR_STOPF; //borra bandera STOP
+    // I2C2->CR2 |= I2C_CR2_STOP;
+    while(!(I2C2->ISR & I2C_ISR_STOPF)); //espera STOP
+    // I2C2->ICR &= ~I2C_ICR_STOPCF; //borra bandera STOP
     I2C2->CR2 = 0;
 }
 
@@ -163,8 +173,11 @@ void ReadByte_i2c2(uint8_t s_addr, uint8_t *data)
     while(!(I2C2->ISR & I2C_ISR_RXNE)); // espera recepción
     ene = I2C2->RXDR;
     *data = ene;
-    char ele = (char)ene;
-    writebuff_usart3(&ele, 1);
+    //char ele = (char)ene;
+    //writebuff_usart3(&ele, 1);
+
+    // I2C2->CR2 |= I2C_CR2_STOP;
     while(!(I2C2->ISR & I2C_ISR_STOPF)); // espera stop
+    // I2C2->ICR &= ~I2C_ICR_STOPCF; //borra bandera STOP
     I2C2->CR2 = 0; // reset CR2    
 }

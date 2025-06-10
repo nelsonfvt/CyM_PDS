@@ -15,6 +15,8 @@ void ReadBuff_i2c1(uint8_t , uint8_t, char *, uint8_t);
 
 void Configura_i2c2();
 
+void Reset_i2c2();
+
 void SendByte_i2c2(uint8_t, uint8_t);
 void ReadByte_i2c2(uint8_t , uint8_t *);
 //void ReadBuff_i2c2(uint8_t , uint8_t, uint8_t *, uint8_t);
