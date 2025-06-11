@@ -1,5 +1,6 @@
 #include "MyMPU6050.h"
 #include <my_i2c.h>
+#include <my_usart3.h>
 
 #define MPU6050_ADDR 0xD0
 #define SMPLRT_DIV_REG 0x19
@@ -21,16 +22,23 @@ void MPU_init()
 
     //verificando dispostivo
     MPU_read(MPU6050_ADDR, WHO_AM_I_REG, &check); //Who I Am
+    //char bla = (char)check;
+    //writebuff_usart3(&bla, 1);
 
     if(check == 104)
     {
         // power management register 0X6B we should write all 0's to wake the sensor up
-        data = 0;
+        data = 0x00;
         MPU_write(MPU6050_ADDR, PWR_MGMT_1_REG, data);
 
         // Set DATA RATE of 1KHz by writing SMPLRT_DIV register
 		data = 0x07;
+        //char pp = (char)data+48;
+        //writebuff_usart3(&pp, 1);
 		MPU_write(MPU6050_ADDR, SMPLRT_DIV_REG, data);
+        //MPU_read(MPU6050_ADDR, SMPLRT_DIV_REG, &data);
+        //char pt = (char)data+48;
+        //writebuff_usart3(&pt, 1);
 
         // Set accelerometer configuration in ACCEL_CONFIG Register
 		// XA_ST=0,YA_ST=0,ZA_ST=0, FS_SEL=0 -> ? 2g
@@ -42,6 +50,9 @@ void MPU_init()
 		data = 0x00;		
         MPU_write(MPU6050_ADDR, GYRO_CONFIG_REG, data);
     }
+    // MPU_read(MPU6050_ADDR, WHO_AM_I_REG, &check); //Who I Am
+    // char bla = (char)check;
+    // writebuff_usart3(&bla, 1);
 }
 
 void MPU_read(uint8_t s_addr, uint8_t r_addr, uint8_t *data)
@@ -54,8 +65,13 @@ void MPU_read(uint8_t s_addr, uint8_t r_addr, uint8_t *data)
 
 void MPU_write(uint8_t s_addr, uint8_t r_addr, uint8_t data)
 {
-    SendByte_i2c2(s_addr, r_addr);
-    SendByte_i2c2(s_addr, data);
+    
+    uint8_t valores[2];
+    valores[0] = r_addr;
+    valores[1] = data;
+
+    SendBuff_i2c2(s_addr, valores, 2);
+
 }
 
 void MPU6050_Read_Accel (float *Ac_buff)
@@ -65,20 +81,20 @@ void MPU6050_Read_Accel (float *Ac_buff)
     int16_t AcZ_raw;
 	
 
-    uint8_t v1;
-    uint8_t v2;
+    uint8_t v1 = 0xFF;
+    uint8_t v2 = 0x00;
 	// Read 6 BYTES of data starting from ACCEL_XOUT_H register
-    MPU_read(MPU6050_ADDR, ACCEL_XOUT_H_REG, &v1);
-    MPU_read(MPU6050_ADDR, ACCEL_XOUT_H_REG+0x01, &v2);
+    MPU_read(MPU6050_ADDR, 0x3B, &v1);
+    MPU_read(MPU6050_ADDR, 0x3C, &v2);
     
     AcX_raw = (int16_t)(v1 << 8 | v2);
 
-    MPU_read(MPU6050_ADDR, ACCEL_XOUT_H_REG+0x02, &v1);
-    MPU_read(MPU6050_ADDR, ACCEL_XOUT_H_REG+0x03, &v2);
+    MPU_read(MPU6050_ADDR, 0x3D, &v1);
+    MPU_read(MPU6050_ADDR, 0x3E, &v2);
     AcY_raw = (int16_t)(v1 << 8 | v2);
 
-    MPU_read(MPU6050_ADDR, ACCEL_XOUT_H_REG+0x04, &v1);
-    MPU_read(MPU6050_ADDR, ACCEL_XOUT_H_REG+0x05, &v2);
+    MPU_read(MPU6050_ADDR, 0x3F, &v1);
+    MPU_read(MPU6050_ADDR, 0x40, &v2);
     AcZ_raw = (int16_t)(v1 << 8 | v2);
 
     //conversion a m/s^2

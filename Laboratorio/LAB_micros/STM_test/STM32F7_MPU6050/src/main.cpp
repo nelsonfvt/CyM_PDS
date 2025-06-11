@@ -4,7 +4,7 @@
 #include <MyMPU6050.h>
 #include "my_func.h"
 
-float Acc[3] =  {-1.0, 3.2, 0.1};
+float Acc[3];
 float Gyr[3];
 
 extern "C"{
@@ -47,6 +47,7 @@ int main()
 
     // Inicializa MPU
     MPU_init();
+    
 
     Configura_timer2();
     //Habilita interrupcion timer2

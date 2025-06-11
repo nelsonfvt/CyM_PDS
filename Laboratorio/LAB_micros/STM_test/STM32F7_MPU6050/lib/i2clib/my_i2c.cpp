@@ -124,9 +124,10 @@ void Configura_i2c2()
 
     // Velocidad de transmision
     RCC->DCKCFGR2 |= 0x80000; //??
-    I2C2->TIMINGR |= (6UL<<I2C_TIMINGR_PRESC_Pos);
-    I2C2->TIMINGR |= 9UL; //SCLL
-    I2C2->TIMINGR |= (9UL<<I2C_TIMINGR_SCLH_Pos); //SCLH
+    // I2C2->TIMINGR |= (6UL<<I2C_TIMINGR_PRESC_Pos);
+    // I2C2->TIMINGR |= 9UL; //SCLL
+    // I2C2->TIMINGR |= (9UL<<I2C_TIMINGR_SCLH_Pos); //SCLH
+    I2C2->TIMINGR = 0x00303D5B;
     
     I2C2->CR1 |= I2C_CR1_ANFOFF; //filtro de ruido desactivado
     I2C2->CR1 |= I2C_CR1_NOSTRETCH; //nostretch desactivado
@@ -149,35 +150,73 @@ void SendByte_i2c2(uint8_t s_addr, uint8_t data)
     I2C2->CR2 |= ((1UL<<I2C_CR2_NBYTES_Pos) | s_addr);//0x020120D0; //CR2 PARA TRANSFERIR BYTE 
     I2C2->CR2 &= ~I2C_CR2_RD_WRN; // escribir
     I2C2->CR2 |= I2C_CR2_START;
+    while(!(I2C2->ISR & I2C_ISR_TXIS));// TXIS espera envio s_addr
     
-    while(!(I2C2->ISR & I2C_ISR_TXIS)); // TXIS espera envio s_addr
-    
-    I2C2->TXDR = data; // carga dato
-    while(!(I2C2->ISR & I2C_ISR_TXE)); //espera envio data
-    
-    // I2C2->CR2 |= I2C_CR2_STOP;
+    int cont = 0;
+    //while(!(I2C2->ISR & I2C_ISR_TC)) //Espera envio comleto 1 Byte
+    while(cont<1)
+    {
+        if(I2C2->ISR & I2C_ISR_TXE) // buffer disponible
+        {
+            I2C2->TXDR = data; // carga dato
+            //char fl = '|';
+            //writebuff_usart3(&fl, 1);
+            cont++;
+        }
+    }
     while(!(I2C2->ISR & I2C_ISR_STOPF)); //espera STOP
-    // I2C2->ICR &= ~I2C_ICR_STOPCF; //borra bandera STOP
-    I2C2->CR2 = 0;
+    
+}
+
+void SendBuff_i2c2(uint8_t s_addr, uint8_t* data, uint8_t size)
+{
+    I2C2->CR2 &= ~I2C_CR2_ADD10; // 7 bits
+    I2C2->CR2 |= I2C_CR2_AUTOEND; //Auto
+    I2C2->CR2 |= ((size<<I2C_CR2_NBYTES_Pos) | s_addr);//0x020120D0; //CR2 PARA TRANSFERIR BYTE 
+    I2C2->CR2 &= ~I2C_CR2_RD_WRN; // escribir
+    I2C2->CR2 |= I2C_CR2_START;
+    while(!(I2C2->ISR & I2C_ISR_TXIS));// TXIS espera envio s_addr
+
+    uint8_t cont = 0;
+    //while(!(I2C2->ISR & I2C_ISR_TC)) //Espera envio comleto 1 Byte
+    while(cont<size)
+    {
+        if(I2C2->ISR & I2C_ISR_TXE) // buffer disponible
+        {
+            I2C2->TXDR = data[cont]; // carga dato
+            cont++;
+        }
+    }
+    while(!(I2C2->ISR & I2C_ISR_STOPF)); //espera STOP
 }
 
 void ReadByte_i2c2(uint8_t s_addr, uint8_t *data)
 {
     I2C2->CR2 &= ~I2C_CR2_ADD10; // 7 bits
     I2C2->CR2 |= I2C_CR2_AUTOEND;
-    I2C2->CR2 |= ((1UL<<I2C_CR2_NBYTES_Pos) | (s_addr+0x01)); //CR2 Para recibir //I2C2->CR2 = 0x020124D0;
+    I2C2->CR2 |= ((1UL<<I2C_CR2_NBYTES_Pos) | (s_addr | 0x01)); //CR2 Para recibir //I2C2->CR2 = 0x020124D0;
     I2C2->CR2 |= I2C_CR2_RD_WRN; // leer
     I2C2->CR2 |= I2C_CR2_START;
     
-    uint8_t ene;
-    while(!(I2C2->ISR & I2C_ISR_RXNE)); // espera recepción
-    ene = I2C2->RXDR;
-    *data = ene;
-    //char ele = (char)ene;
-    //writebuff_usart3(&ele, 1);
+    while(!(I2C2->ISR & I2C_ISR_STOPF))//espera hasta que se genera stop
+    {
+        if(I2C2->ISR & I2C_ISR_RXNE) // buferr disponible
+        {
+            data[0] = I2C2->RXDR;
+            // char pr = '|';
+            // writebuff_usart3(&pr, 1);
+        }
+    }
 
-    // I2C2->CR2 |= I2C_CR2_STOP;
-    while(!(I2C2->ISR & I2C_ISR_STOPF)); // espera stop
-    // I2C2->ICR &= ~I2C_ICR_STOPCF; //borra bandera STOP
+    // uint8_t ene;
+    // while(!(I2C2->ISR & I2C_ISR_RXNE)); // espera recepción
+    // ene = I2C2->RXDR;
+    // *data = ene;
+    // //char ele = (char)ene;
+    // //writebuff_usart3(&ele, 1);
+
+    // // I2C2->CR2 |= I2C_CR2_STOP;
+    // while(!(I2C2->ISR & I2C_ISR_STOPF)); // espera stop
+    // // I2C2->ICR &= ~I2C_ICR_STOPCF; //borra bandera STOP
     I2C2->CR2 = 0; // reset CR2    
 }
