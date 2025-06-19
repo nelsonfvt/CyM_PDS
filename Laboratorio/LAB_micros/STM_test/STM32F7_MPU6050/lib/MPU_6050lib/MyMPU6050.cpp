@@ -33,13 +33,8 @@ void MPU_init()
 
         // Set DATA RATE of 1KHz by writing SMPLRT_DIV register
 		data = 0x07;
-        //char pp = (char)data+48;
-        //writebuff_usart3(&pp, 1);
 		MPU_write(MPU6050_ADDR, SMPLRT_DIV_REG, data);
-        //MPU_read(MPU6050_ADDR, SMPLRT_DIV_REG, &data);
-        //char pt = (char)data+48;
-        //writebuff_usart3(&pt, 1);
-
+        
         // Set accelerometer configuration in ACCEL_CONFIG Register
 		// XA_ST=0,YA_ST=0,ZA_ST=0, FS_SEL=0 -> ? 2g
 		data = 0x00;
