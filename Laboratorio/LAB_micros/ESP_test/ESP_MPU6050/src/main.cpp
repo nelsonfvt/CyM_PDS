@@ -3,7 +3,9 @@
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 
-#include "my_util.h"
+#include "my_func.h"
+
+#define LED_PIN 2
 
 Adafruit_MPU6050 mpu;
 
@@ -11,27 +13,18 @@ hw_timer_t *timer = NULL;
 volatile SemaphoreHandle_t timerSemaphore;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
-volatile float acc_t[3] = {0};
-volatile float gyr_t[3] = {0};
+volatile sensors_event_t a, g, temp;
 
 void ARDUINO_ISR_ATTR onTimer()
 {
-  sensors_event_t a, g, temp;
-  mpu.getEvent(&a, &g, &temp);
-  // Increment the counter and set the time of ISR
+  
   portENTER_CRITICAL_ISR(&timerMux);
-  acc_t[0] = a.acceleration.x;
-  acc_t[1] = a.acceleration.y;
-  acc_t[2] = a.acceleration.z;
 
-  gyr_t[0] = g.gyro.x;
-  gyr_t[1] = g.gyro.y;
-  gyr_t[2] = g.gyro.z;
   portEXIT_CRITICAL_ISR(&timerMux);
   // Give a semaphore that we can check in the loop
   xSemaphoreGiveFromISR(timerSemaphore, NULL);
   // It is safe to use digitalRead/Write here if you want to toggle an output
-  //digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+  digitalWrite(LED_PIN, !digitalRead(LED_PIN));
 }
 
 void setup()
@@ -68,15 +61,27 @@ void loop()
 {
     if(xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
     {
-      float acc[3];
-      float gyr[3];
+      sensors_event_t a, g, temp;
+      mpu.getEvent(&a, &g, &temp);
+
+      float acc[3] = {0};
+      float gyr[3] = {0};
+
       portENTER_CRITICAL(&timerMux);
-      for(int i=0;i<3;i++)
-      {
-        acc[i] = acc_t[i];
-        gyr[i] = gyr_t[i];
-      }
-      portEXIT_CRITICAL(&timerMux);
       
+      portEXIT_CRITICAL(&timerMux);
+
+      acc[0] = a.acceleration.x;
+      acc[1] = a.acceleration.y;
+      acc[2] = a.acceleration.z;
+
+      gyr[0] = g.gyro.x;
+      gyr[1] = g.gyro.y;
+      gyr[2] = g.gyro.z;
+
+      char sendData[26];
+      en_pack('a', sendData, acc, gyr);
+
+      Serial.print(sendData);
     }
 }
