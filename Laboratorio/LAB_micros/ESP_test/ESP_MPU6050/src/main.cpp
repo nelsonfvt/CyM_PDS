@@ -13,8 +13,6 @@ hw_timer_t *timer = NULL;
 volatile SemaphoreHandle_t timerSemaphore;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
-volatile sensors_event_t a, g, temp;
-
 void ARDUINO_ISR_ATTR onTimer()
 {
   
