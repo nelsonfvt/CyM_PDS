@@ -1,13 +1,9 @@
 #include <Arduino.h>
-#include <Adafruit_MPU6050.h>
-#include <Adafruit_Sensor.h>
-#include <Wire.h>
 
 #include "my_func.h"
+#include "MyMPU6050.h"
 
 #define LED_PIN 2
-
-Adafruit_MPU6050 mpu;
 
 hw_timer_t *timer = NULL;
 volatile SemaphoreHandle_t timerSemaphore;
@@ -31,12 +27,13 @@ void setup()
     Serial.begin(115200);
 
     // inicializando MPU
-    mpu.begin();
+    //mpu.begin();
+    MPU_init();
 
     // configura MPU
-    mpu.setSampleRateDivisor(0x07);
-    mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
-    mpu.setGyroRange(MPU6050_RANGE_250_DEG);
+    //mpu.setSampleRateDivisor(0x07);
+    //mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
+    //mpu.setGyroRange(MPU6050_RANGE_250_DEG);
     
 
     // Create semaphore to inform us when the timer has fired
@@ -59,8 +56,6 @@ void loop()
 {
     if(xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
     {
-      sensors_event_t a, g, temp;
-      mpu.getEvent(&a, &g, &temp);
 
       float acc[3] = {0};
       float gyr[3] = {0};
@@ -69,13 +64,8 @@ void loop()
       
       portEXIT_CRITICAL(&timerMux);
 
-      acc[0] = a.acceleration.x;
-      acc[1] = a.acceleration.y;
-      acc[2] = a.acceleration.z;
-
-      gyr[0] = g.gyro.x;
-      gyr[1] = g.gyro.y;
-      gyr[2] = g.gyro.z;
+      MPU6050_Read_Accel(acc);
+      MPU6050_Read_Gyro(gyr);
 
       char sendData[26];
       en_pack('a', sendData, acc, gyr);
