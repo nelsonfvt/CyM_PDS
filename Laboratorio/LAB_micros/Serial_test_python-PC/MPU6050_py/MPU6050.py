@@ -38,23 +38,19 @@ class MPU6050_2_csv:
 
             while f:
                 t_list = [None] * 6
-                band = self.s_comm.read()
+                band = self.s_comm.read(2) #leer 2 bytes
+                sband = band.decode('utf-8', errors='replace')
 
-                if band[0] == 97:
+                if sband == "aa":
 
-                    buff = self.s_comm.read(4)
+                    buff = self.s_comm.read(25)
                     ax = struct.unpack('f', buff[0:4])[0] # bytes a float
-                    buff = self.s_comm.read(4)
-                    ay = struct.unpack('f', buff[0:4])[0] # bytes a float
-                    buff = self.s_comm.read(4)
-                    az = struct.unpack('f', buff[0:4])[0] # bytes a float
+                    ay = struct.unpack('f', buff[4:8])[0] # bytes a float
+                    az = struct.unpack('f', buff[8:12])[0] # bytes a float
 
-                    buff = self.s_comm.read(4)
-                    gx = struct.unpack('f', buff[0:4])[0] # bytes a float
-                    buff = self.s_comm.read(4)
-                    gy = struct.unpack('f', buff[0:4])[0] # bytes a float
-                    buff = self.s_comm.read(4)
-                    gz = struct.unpack('f', buff[0:4])[0] # bytes a float
+                    gx = struct.unpack('f', buff[12:16])[0] # bytes a float
+                    gy = struct.unpack('f', buff[16:20])[0] # bytes a float
+                    gz = struct.unpack('f', buff[20:24])[0] # bytes a float
 
                     t_list[0] = ax
                     t_list[1] = ay
@@ -68,33 +64,9 @@ class MPU6050_2_csv:
                     if cont == self.n_samples:
                         f = False
                     self.values_list[cont-1] = t_list
-                
 
-
-
-            # for n in range(0, self.n_samples):
-            #     l = self.s_comm.readline()
-            #     t_list = [None] * 6
-            #     if l[0] == 97: # or l[0] == 103:
-            #         ax = struct.unpack('f', l[1:5])[0] # bytes a float
-            #         ay = struct.unpack('f', l[5:9])[0] # bytes a float
-            #         az = struct.unpack('f', l[9:13])[0] # bytes a float
-
-            #         gx = struct.unpack('f', l[13:17])[0] # bytes a float
-            #         gy = struct.unpack('f', l[17:21])[0] # bytes a float
-            #         gz = struct.unpack('f', l[21:25])[0] # bytes a float
-
-            #         t_list[0] = ax
-            #         t_list[1] = ay
-            #         t_list[2] = az
-
-            #         t_list[3] = gx
-            #         t_list[4] = gy
-            #         t_list[5] = gz
-
-            #         print (t_list)
-                    
-
+                else:
+                    print("error de trama")
         
         else:
             print("Puerto serial no abierto")
