@@ -67,9 +67,9 @@ void loop()
       MPU6050_Read_Accel(acc);
       MPU6050_Read_Gyro(gyr);
 
-      char sendData[26];
+      char sendData[27];
       en_pack('a', sendData, acc, gyr);
 
-      Serial.print(sendData);
+      Serial.write(sendData,27);
     }
 }
