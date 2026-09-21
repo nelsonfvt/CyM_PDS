@@ -40,8 +40,12 @@ void setup()
 
     // Set alarm to call onTimer function every second (value in microseconds).
     // Repeat the alarm (third parameter) with unlimited count = 0 (fourth parameter).
-    timerAlarmWrite(timer, 2000, true);
+    timerAlarmWrite(timer, 10000, true);
     timerAlarmEnable(timer);
+
+    // Configura el pin GPIO 2 como salida digital
+    pinMode(LED_PIN, OUTPUT);
+    digitalWrite(LED_PIN, LOW);
 
 }
 
