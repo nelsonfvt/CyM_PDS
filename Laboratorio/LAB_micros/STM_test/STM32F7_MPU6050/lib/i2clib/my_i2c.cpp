@@ -20,7 +20,7 @@ void Configura_i2c1()
     GPIOB->OSPEEDR |= (2UL<<GPIO_OSPEEDR_OSPEEDR9_Pos); //High Speed
     GPIOB->PUPDR |= (1UL<<GPIO_PUPDR_PUPDR9_Pos); //Pull-up activado B7
 
-    // Velocidad de transmision
+    // Velocidad de transmision (100 kHz)
     RCC->DCKCFGR2 |= 0x80000; //??
     I2C1->TIMINGR |= (6UL<<I2C_TIMINGR_PRESC_Pos);
     I2C1->TIMINGR |= 9UL; //SCLL
@@ -111,21 +111,20 @@ void Configura_i2c2()
     
     //Configurando pin F1 SCL
     GPIOF->MODER |= (2UL<<GPIO_MODER_MODER1_Pos); //Pin F1 modo alternativo
-    GPIOF->AFR[0] |= (4UL<<GPIO_AFRL_AFRL1_Pos); //Funcion alternativa 4 B6
-    GPIOF->OTYPER |= GPIO_OTYPER_OT1; //Open-Drain B6
+    GPIOF->AFR[0] |= (4UL<<GPIO_AFRL_AFRL1_Pos); //Funcion alternativa 4 F1
+    GPIOF->OTYPER |= GPIO_OTYPER_OT1; //Open-Drain F1
     GPIOF->OSPEEDR |= (2UL<<GPIO_OSPEEDR_OSPEEDR1_Pos); //High Speed
-    GPIOF->PUPDR |= (1UL<<GPIO_PUPDR_PUPDR1_Pos); //Pull-up activado B6
+    GPIOF->PUPDR |= (1UL<<GPIO_PUPDR_PUPDR1_Pos); //Pull-up activado F1
     //Configurando pin F0 SDA
-    GPIOF->MODER |= (2UL<<GPIO_MODER_MODER0_Pos); //Pin B7 modo alternativo
-    GPIOF->AFR[0] |= (4UL<<GPIO_AFRL_AFRL0_Pos); //Funcion alternativa 4 B7
-    GPIOF->OTYPER |= GPIO_OTYPER_OT0; //Open-Drain B7
+    GPIOF->MODER |= (2UL<<GPIO_MODER_MODER0_Pos); //Pin F0 modo alternativo
+    GPIOF->AFR[0] |= (4UL<<GPIO_AFRL_AFRL0_Pos); //Funcion alternativa 4 F0
+    GPIOF->OTYPER |= GPIO_OTYPER_OT0; //Open-Drain F0
     GPIOF->OSPEEDR |= (2UL<<GPIO_OSPEEDR_OSPEEDR0_Pos); //High Speed
-    GPIOF->PUPDR |= (1UL<<GPIO_PUPDR_PUPDR0_Pos); //Pull-up activado B7
+    GPIOF->PUPDR |= (1UL<<GPIO_PUPDR_PUPDR0_Pos); //Pull-up activado F0
 
-    // Velocidad de transmision
+    // Velocidad de transmision (100 kHz)
     RCC->DCKCFGR2 |= 0x80000; //??
     I2C2->TIMINGR = 0x00303D5B;
-    
     I2C2->CR1 |= I2C_CR1_ANFOFF; //filtro de ruido desactivado
     I2C2->CR1 |= I2C_CR1_NOSTRETCH; //nostretch desactivado
 

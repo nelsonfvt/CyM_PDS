@@ -27,14 +27,7 @@ void setup()
     Serial.begin(115200);
 
     // inicializando MPU
-    //mpu.begin();
     MPU_init();
-
-    // configura MPU
-    //mpu.setSampleRateDivisor(0x07);
-    //mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
-    //mpu.setGyroRange(MPU6050_RANGE_250_DEG);
-    
 
     // Create semaphore to inform us when the timer has fired
     timerSemaphore = xSemaphoreCreateBinary();

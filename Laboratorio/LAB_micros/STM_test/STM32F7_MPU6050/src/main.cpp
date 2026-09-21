@@ -16,12 +16,6 @@ extern "C"{
         MPU6050_Read_Gyro(Gyr);
         send_pack('a', Acc, Gyr);
 
-        // uint8_t check;
-        // MPU_read(0xD0, 0x75, &check);
-        // char ele = (char)check;
-        // writebuff_usart3(&ele, 1);
-
-
         GPIOB->ODR ^= GPIO_ODR_OD0;
         GPIOB->ODR ^= GPIO_ODR_OD7;
         GPIOB->ODR ^= GPIO_ODR_OD14;
@@ -48,7 +42,6 @@ int main()
     // Inicializa MPU
     MPU_init();
     
-
     Configura_timer2();
     //Habilita interrupcion timer2
 	NVIC_EnableIRQ(TIM2_IRQn);
